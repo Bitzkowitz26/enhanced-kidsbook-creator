@@ -37,6 +37,14 @@ class KidsBookCreator {
                 this.updateActiveNavLink(link);
             });
         });
+        
+        // Hero buttons
+        document.querySelectorAll('[data-section]').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const section = button.getAttribute('data-section');
+                this.showSection(section);
+            });
+        });
     }
     
     showSection(sectionId) {
