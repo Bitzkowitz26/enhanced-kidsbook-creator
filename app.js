@@ -1,7 +1,9 @@
 // Modern KidsBook Creator - Enhanced JavaScript with all features
+console.log('KidsBook Creator JavaScript loaded successfully!');
 
 class KidsBookCreator {
     constructor() {
+        console.log('KidsBookCreator constructor called');
         this.currentStep = 1;
         this.characterImage = null;
         this.storyData = null;
@@ -48,15 +50,22 @@ class KidsBookCreator {
     }
     
     showSection(sectionId) {
+        console.log('showSection called with:', sectionId);
+        
         // Hide all sections
         document.querySelectorAll('.section, .hero').forEach(section => {
+            console.log('Hiding section:', section.id);
             section.style.display = 'none';
         });
         
         // Show target section
         const targetSection = document.getElementById(sectionId);
+        console.log('Target section found:', targetSection);
         if (targetSection) {
             targetSection.style.display = 'block';
+            console.log('Showing section:', sectionId);
+        } else {
+            console.error('Section not found:', sectionId);
         }
         
         // Special handling for create section
