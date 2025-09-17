@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KidsBook Creator - Enhanced AI-Powered Children's Book Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+    
+    <!-- External Libraries -->
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="#" class="logo">
+                    <span class="logo-icon">📚</span>
+                    KidsBook Creator
+                </a>
+                <ul class="nav-links">
+                    <li><a href="#" class="nav-link">Home</a></li>
+                    <li><a href="#" class="nav-link">Gallery</a></li>
+                    <li><a href="#" class="nav-link">Help</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <div class="app-container">
+                
+                <!-- Welcome Screen -->
+                <div id="welcome-screen" class="screen active">
+                    <div class="screen-header">
+                        <h1 class="screen-title">Create Magical Children's Books</h1>
+                        <p class="screen-subtitle">
+                            Transform your imagination into beautiful, illustrated children's books with AI-powered storytelling and artwork.
+                        </p>
+                    </div>
+                    
+                    <div class="welcome-options">
+                        <div class="option-card" onclick="app.showScreen('create-new-screen')">
+                            <span class="option-icon">✨</span>
+                            <h3 class="option-title">Create New Story</h3>
+                            <p class="option-description">Start from scratch with AI-generated content and illustrations</p>
+                        </div>
+                        
+                        <div class="option-card" onclick="app.showScreen('upload-screen')">
+                            <span class="option-icon">📄</span>
+                            <h3 class="option-title">Upload Existing Content</h3>
+                            <p class="option-description">Import chapters from Google Docs, Word files, or text documents</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create New Story Screen -->
+                <div id="create-new-screen" class="screen">
+                    <div class="screen-header">
+                        <h2 class="screen-title">Create Your Story</h2>
+                        <p class="screen-subtitle">Tell us about your story and we'll help bring it to life</p>
+                    </div>
+
+                    <form id="story-form">
+                        <div class="form-group">
+                            <label class="form-label" for="story-title">Story Title</label>
+                            <input type="text" id="story-title" class="form-input" placeholder="Enter your story title...">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="story-prompt">Story Idea</label>
+                            <textarea id="story-prompt" class="form-textarea" placeholder="Describe your story idea... (e.g., A brave little mouse who goes on an adventure to find the magical cheese castle)"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="child-age">Target Age Group</label>
+                            <select id="child-age" class="form-select">
+                                <option value="">Select age group...</option>
+                                <option value="3-5">3-5 years (Preschool)</option>
+                                <option value="6-8">6-8 years (Early Elementary)</option>
+                                <option value="9-12">9-12 years (Elementary)</option>
+                                <option value="13+">13+ years (Teen)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="book-length">Story Length</label>
+                            <select id="book-length" class="form-select">
+                                <option value="">Select length...</option>
+                                <option value="short">Short (4 chapters)</option>
+                                <option value="medium">Medium (6 chapters)</option>
+                                <option value="long">Long (8 chapters)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="art-style">Art Style</label>
+                            <select id="art-style" class="form-select">
+                                <option value="">Select art style...</option>
+                                <option value="cartoon">Cartoon</option>
+                                <option value="watercolor">Watercolor</option>
+                                <option value="digital">Digital Art</option>
+                                <option value="hand-drawn">Hand-drawn</option>
+                                <option value="realistic">Realistic</option>
+                            </select>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <button type="button" class="btn btn-secondary" onclick="app.showScreen('welcome-screen')">
+                                ← Back
+                            </button>
+                            <button type="button" id="generate-story-btn" class="btn btn-primary btn-full" onclick="app.generateStory()">
+                                Generate Story ✨
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Upload Screen -->
+                <div id="upload-screen" class="screen">
+                    <div class="screen-header">
+                        <h2 class="screen-title">Upload Your Content</h2>
+                        <p class="screen-subtitle">Import chapters from various sources to create your book</p>
+                    </div>
+
+                    <div class="upload-zone" id="upload-zone">
+                        <div class="upload-icon">📁</div>
+                        <h3>Drag & Drop Files Here</h3>
+                        <p>Or click to browse files</p>
+                        <p class="text-light">Supports: .docx, .pdf, .txt, Google Docs</p>
+                        <input type="file" id="file-input" multiple accept=".docx,.pdf,.txt" style="display: none;">
+                    </div>
+
+                    <div id="uploaded-files" class="chapter-list"></div>
+
+                    <div class="flex gap-2">
+                        <button type="button" class="btn btn-secondary" onclick="app.showScreen('welcome-screen')">
+                            ← Back
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="app.connectGoogleDrive()">
+                            📄 Connect Google Drive
+                        </button>
+                        <button type="button" id="process-uploads-btn" class="btn btn-primary" onclick="app.processUploads()" disabled>
+                            Process Files →
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chapter Management Screen -->
+                <div id="chapter-management-screen" class="screen">
+                    <div class="screen-header">
+                        <h2 class="screen-title">Manage Your Chapters</h2>
+                        <p class="screen-subtitle">Edit, reorder, and enhance your story chapters</p>
+                    </div>
+
+                    <div class="flex justify-between items-center mb-4">
+                        <h3>Chapters</h3>
+                        <button type="button" class="btn btn-secondary btn-small" onclick="app.addNewChapter()">
+                            + Add Chapter
+                        </button>
+                    </div>
+
+                    <div id="chapters-container" class="chapter-list"></div>
+
+                    <div class="flex gap-2">
+                        <button type="button" class="btn btn-secondary" onclick="app.goBack()">
+                            ← Back
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="app.generateImages()">
+                            🎨 Generate Images
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="app.showPreview()">
+                            👁️ Preview Book
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chapter Editor Screen -->
+                <div id="chapter-editor-screen" class="screen">
+                    <div class="screen-header">
+                        <h2 class="screen-title">Edit Chapter</h2>
+                        <p class="screen-subtitle">Customize your chapter content and style</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="chapter-title-input">Chapter Title</label>
+                        <input type="text" id="chapter-title-input" class="form-input" placeholder="Enter chapter title...">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Chapter Content</label>
+                        <div id="chapter-editor" class="editor-container"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Chapter Image</label>
+                        <div id="chapter-image-container">
+                            <div class="chapter-image-placeholder">
+                                Click "Generate Image" to create an illustration for this chapter
+                            </div>
+                        </div>
+                        <div class="flex gap-2 mt-2">
+                            <button type="button" class="btn btn-secondary btn-small" onclick="app.generateChapterImage()">
+                                🎨 Generate Image
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-small" onclick="app.regenerateChapterImage()">
+                                🔄 Regenerate
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button type="button" class="btn btn-secondary" onclick="app.showScreen('chapter-management-screen')">
+                            ← Back to Chapters
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="app.saveChapter()">
+                            💾 Save Chapter
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Preview Screen -->
+                <div id="preview-screen" class="screen">
+                    <div class="screen-header">
+                        <h2 class="screen-title">Book Preview</h2>
+                        <p class="screen-subtitle">Review your book before exporting</p>
+                    </div>
+
+                    <div class="preview-container">
+                        <div id="preview-pages"></div>
+                        
+                        <div class="preview-navigation">
+                            <button type="button" class="btn btn-secondary btn-small" id="prev-page-btn" onclick="app.previousPage()">
+                                ← Previous
+                            </button>
+                            <span class="page-indicator" id="page-indicator">Page 1 of 1</span>
+                            <button type="button" class="btn btn-secondary btn-small" id="next-page-btn" onclick="app.nextPage()">
+                                Next →
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 mt-4">
+                        <button type="button" class="btn btn-secondary" onclick="app.showScreen('chapter-management-screen')">
+                            ← Back to Edit
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="app.approveForExport()">
+                            ✅ Approve for Export
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Export Screen -->
+                <div id="export-screen" class="screen">
+                    <div class="screen-header">
+                        <h2 class="screen-title">Export Your Book</h2>
+                        <p class="screen-subtitle">Choose your preferred format and download your creation</p>
+                    </div>
+
+                    <div class="welcome-options">
+                        <div class="option-card" onclick="app.exportPDF()">
+                            <span class="option-icon">📄</span>
+                            <h3 class="option-title">PDF Book</h3>
+                            <p class="option-description">High-quality PDF perfect for printing or digital reading</p>
+                        </div>
+                        
+                        <div class="option-card" onclick="app.exportEPUB()">
+                            <span class="option-icon">📱</span>
+                            <h3 class="option-title">Digital Book (EPUB)</h3>
+                            <p class="option-description">Interactive digital format for tablets and e-readers</p>
+                        </div>
+                        
+                        <div class="option-card" onclick="app.exportJSON()">
+                            <span class="option-icon">💾</span>
+                            <h3 class="option-title">Save Project</h3>
+                            <p class="option-description">Save your work to continue editing later</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 mt-4">
+                        <button type="button" class="btn btn-secondary" onclick="app.showScreen('preview-screen')">
+                            ← Back to Preview
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="app.createAnother()">
+                            ✨ Create Another Book
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Loading Screen -->
+                <div id="loading-screen" class="screen">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <div>
+                            <h3 id="loading-title">Processing...</h3>
+                            <p id="loading-message">Please wait while we work on your book</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
