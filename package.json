@@ -1,0 +1,36 @@
+{
+  "name": "enhanced-kidsbook-creator",
+  "version": "1.0.0",
+  "description": "Enhanced AI-powered children's book creator with chapter management, image generation, and preview capabilities",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "echo 'No build step required for static files'",
+    "test": "echo 'Tests would go here'"
+  },
+  "keywords": [
+    "children",
+    "books",
+    "ai",
+    "storytelling",
+    "education",
+    "creativity"
+  ],
+  "author": "OpenHands AI",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "multer": "^1.4.5-lts.1",
+    "formidable": "^3.5.1",
+    "mammoth": "^1.6.0",
+    "pdf-parse": "^1.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
