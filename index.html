@@ -139,17 +139,303 @@
         <div class="container">
             <div class="section-header">
                 <h2><i class="fas fa-plus-circle"></i> Create Your Book</h2>
-                <p>Upload your photo and let AI create your personalized story</p>
+                <p>Create your personalized children's book with AI-powered illustrations</p>
             </div>
             
-            <div class="create-steps">
-                <div class="step active" id="step1">
-                    <h3>Step 1: Upload Your Photo</h3>
-                    <div class="upload-area">
-                        <input type="file" id="characterUpload" accept="image/*" style="display: none;">
-                        <div class="upload-placeholder" onclick="document.getElementById('characterUpload').click()">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <p>Click to upload your photo</p>
+            <div class="create-workflow">
+                <!-- Step 1: Character Setup -->
+                <div class="create-step active" id="step-character">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <h3>Character Setup</h3>
+                        <p>Upload your photo to become the main character</p>
+                    </div>
+                    
+                    <div class="character-setup">
+                        <div class="upload-section">
+                            <input type="file" id="characterUpload" accept="image/*" style="display: none;">
+                            <div class="upload-area" data-upload="character">
+                                <div class="upload-placeholder">
+                                    <i class="fas fa-user-plus"></i>
+                                    <h4>Upload Character Photo</h4>
+                                    <p>Choose a clear photo for consistent AI character generation</p>
+                                    <button class="btn btn-primary">Select Photo</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="character-details">
+                            <h4>Character Details</h4>
+                            <div class="form-group">
+                                <label>Character Name</label>
+                                <input type="text" id="characterName" placeholder="Enter character name">
+                            </div>
+                            <div class="form-group">
+                                <label>Age</label>
+                                <select id="characterAge">
+                                    <option value="">Select age</option>
+                                    <option value="3-5">3-5 years</option>
+                                    <option value="6-8">6-8 years</option>
+                                    <option value="9-12">9-12 years</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-actions">
+                        <button class="btn btn-primary" data-next-step="story">Continue to Story</button>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Story Creation -->
+                <div class="create-step" id="step-story" style="display: none;">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <h3>Story Creation</h3>
+                        <p>Create your story content using multiple methods</p>
+                    </div>
+                    
+                    <div class="story-options">
+                        <div class="story-method active" data-method="write">
+                            <h4><i class="fas fa-pen"></i> Write Your Own</h4>
+                            <p>Write your story chapter by chapter</p>
+                        </div>
+                        <div class="story-method" data-method="upload">
+                            <h4><i class="fas fa-upload"></i> Upload Content</h4>
+                            <p>Upload from Google Docs, Word, or text files</p>
+                        </div>
+                        <div class="story-method" data-method="ai">
+                            <h4><i class="fas fa-magic"></i> AI Generated</h4>
+                            <p>Let AI create a story from your prompt</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Write Your Own -->
+                    <div class="story-content active" id="content-write">
+                        <div class="chapter-manager">
+                            <div class="chapter-header">
+                                <h4>Chapters</h4>
+                                <button class="btn btn-secondary" data-action="add-chapter">
+                                    <i class="fas fa-plus"></i> Add Chapter
+                                </button>
+                            </div>
+                            
+                            <div class="chapters-list" id="chaptersList">
+                                <div class="chapter-item" data-chapter="1">
+                                    <div class="chapter-info">
+                                        <span class="chapter-number">Chapter 1</span>
+                                        <input type="text" class="chapter-title" placeholder="Chapter title">
+                                    </div>
+                                    <div class="chapter-actions">
+                                        <button class="btn-icon" data-action="edit-chapter" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon" data-action="delete-chapter" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chapter-editor" id="chapterEditor" style="display: none;">
+                            <div class="editor-header">
+                                <h4>Edit Chapter <span id="currentChapterNumber">1</span></h4>
+                                <button class="btn btn-secondary" data-action="close-editor">Close</button>
+                            </div>
+                            <div class="editor-content">
+                                <textarea id="chapterText" placeholder="Write your chapter content here..."></textarea>
+                            </div>
+                            <div class="editor-actions">
+                                <button class="btn btn-primary" data-action="save-chapter">Save Chapter</button>
+                                <button class="btn btn-secondary" data-action="preview-chapter">Preview with AI Images</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Upload Content -->
+                    <div class="story-content" id="content-upload" style="display: none;">
+                        <div class="upload-options">
+                            <div class="upload-method">
+                                <h4><i class="fab fa-google-drive"></i> Google Docs</h4>
+                                <p>Import directly from Google Docs</p>
+                                <input type="file" id="googleDocsUpload" accept=".docx,.doc" style="display: none;">
+                                <button class="btn btn-primary" data-upload="google-docs">Import from Google Docs</button>
+                            </div>
+                            
+                            <div class="upload-method">
+                                <h4><i class="fas fa-file-word"></i> Word Document</h4>
+                                <p>Upload .docx or .doc files</p>
+                                <input type="file" id="wordUpload" accept=".docx,.doc" style="display: none;">
+                                <button class="btn btn-primary" data-upload="word">Upload Word Document</button>
+                            </div>
+                            
+                            <div class="upload-method">
+                                <h4><i class="fas fa-file-alt"></i> Text File</h4>
+                                <p>Upload .txt files</p>
+                                <input type="file" id="textUpload" accept=".txt" style="display: none;">
+                                <button class="btn btn-primary" data-upload="text">Upload Text File</button>
+                            </div>
+                        </div>
+                        
+                        <div class="upload-preview" id="uploadPreview" style="display: none;">
+                            <h4>Imported Content</h4>
+                            <div class="content-preview" id="contentPreview"></div>
+                            <div class="upload-actions">
+                                <button class="btn btn-primary" data-action="process-upload">Process into Chapters</button>
+                                <button class="btn btn-secondary" data-action="clear-upload">Clear</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- AI Generated -->
+                    <div class="story-content" id="content-ai" style="display: none;">
+                        <div class="ai-prompt">
+                            <h4>Story Prompt</h4>
+                            <textarea id="aiPrompt" placeholder="Describe the story you want to create. For example: 'A magical adventure where the main character discovers a hidden forest with talking animals and learns about friendship and courage.'"></textarea>
+                            
+                            <div class="ai-options">
+                                <div class="form-group">
+                                    <label>Story Length</label>
+                                    <select id="storyLength">
+                                        <option value="short">Short (3-5 chapters)</option>
+                                        <option value="medium">Medium (6-10 chapters)</option>
+                                        <option value="long">Long (11-15 chapters)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Theme</label>
+                                    <select id="storyTheme">
+                                        <option value="adventure">Adventure</option>
+                                        <option value="friendship">Friendship</option>
+                                        <option value="magic">Magic & Fantasy</option>
+                                        <option value="animals">Animals</option>
+                                        <option value="space">Space</option>
+                                        <option value="underwater">Underwater</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-primary" data-action="generate-story">
+                                <i class="fas fa-magic"></i> Generate Story
+                            </button>
+                        </div>
+                        
+                        <div class="ai-result" id="aiResult" style="display: none;">
+                            <h4>Generated Story</h4>
+                            <div class="story-preview" id="storyPreview"></div>
+                            <div class="ai-actions">
+                                <button class="btn btn-primary" data-action="accept-story">Accept Story</button>
+                                <button class="btn btn-secondary" data-action="regenerate-story">Regenerate</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-actions">
+                        <button class="btn btn-secondary" data-prev-step="character">Back</button>
+                        <button class="btn btn-primary" data-next-step="preview">Continue to Preview</button>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Preview & Approve -->
+                <div class="create-step" id="step-preview" style="display: none;">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <h3>Preview & Approve</h3>
+                        <p>Review your book with AI-generated illustrations</p>
+                    </div>
+                    
+                    <div class="book-preview-container">
+                        <div class="preview-controls">
+                            <button class="btn btn-secondary" data-action="prev-chapter">
+                                <i class="fas fa-chevron-left"></i> Previous
+                            </button>
+                            <span class="chapter-indicator">Chapter <span id="previewChapterNum">1</span> of <span id="totalChapters">1</span></span>
+                            <button class="btn btn-secondary" data-action="next-chapter">
+                                Next <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="chapter-preview" id="chapterPreview">
+                            <div class="preview-content">
+                                <div class="chapter-image">
+                                    <div class="image-placeholder">
+                                        <i class="fas fa-image"></i>
+                                        <p>AI illustration will appear here</p>
+                                        <button class="btn btn-primary" data-action="generate-image">Generate Image</button>
+                                    </div>
+                                </div>
+                                <div class="chapter-text">
+                                    <h4 class="chapter-title-preview">Chapter Title</h4>
+                                    <div class="chapter-content-preview">Chapter content will appear here...</div>
+                                </div>
+                            </div>
+                            
+                            <div class="preview-actions">
+                                <button class="btn btn-success" data-action="approve-chapter">
+                                    <i class="fas fa-check"></i> Approve Chapter
+                                </button>
+                                <button class="btn btn-warning" data-action="regenerate-image">
+                                    <i class="fas fa-redo"></i> Regenerate Image
+                                </button>
+                                <button class="btn btn-secondary" data-action="edit-text">
+                                    <i class="fas fa-edit"></i> Edit Text
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-actions">
+                        <button class="btn btn-secondary" data-prev-step="story">Back</button>
+                        <button class="btn btn-success" data-next-step="export">Export Book</button>
+                    </div>
+                </div>
+                
+                <!-- Step 4: Export -->
+                <div class="create-step" id="step-export" style="display: none;">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <h3>Export Your Book</h3>
+                        <p>Download your completed digital book</p>
+                    </div>
+                    
+                    <div class="export-options">
+                        <div class="export-format">
+                            <h4><i class="fas fa-file-pdf"></i> PDF Book</h4>
+                            <p>High-quality PDF perfect for reading and printing</p>
+                            <button class="btn btn-primary" data-action="export-pdf">
+                                <i class="fas fa-download"></i> Download PDF
+                            </button>
+                        </div>
+                        
+                        <div class="export-format">
+                            <h4><i class="fas fa-images"></i> Individual Images</h4>
+                            <p>Download all illustrations separately</p>
+                            <button class="btn btn-secondary" data-action="export-images">
+                                <i class="fas fa-download"></i> Download Images
+                            </button>
+                        </div>
+                        
+                        <div class="export-format">
+                            <h4><i class="fas fa-share"></i> Share Online</h4>
+                            <p>Get a shareable link to your book</p>
+                            <button class="btn btn-secondary" data-action="share-book">
+                                <i class="fas fa-link"></i> Generate Link
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="export-success" id="exportSuccess" style="display: none;">
+                        <div class="success-message">
+                            <i class="fas fa-check-circle"></i>
+                            <h4>Book Created Successfully!</h4>
+                            <p>Your personalized children's book is ready!</p>
+                        </div>
+                        
+                        <div class="success-actions">
+                            <button class="btn btn-primary" data-section="gallery">View in Gallery</button>
+                            <button class="btn btn-secondary" data-action="create-another">Create Another Book</button>
                         </div>
                     </div>
                 </div>
@@ -237,9 +523,13 @@
         class KidsBookCreator {
             constructor() {
                 console.log('KidsBookCreator constructor called');
-                this.currentStep = 1;
+                this.currentStep = 'character';
                 this.characterImage = null;
-                this.storyData = null;
+                this.characterName = '';
+                this.characterAge = '';
+                this.storyMethod = 'write';
+                this.chapters = [];
+                this.currentChapter = 1;
                 this.generatedImages = {};
                 this.currentBook = null;
                 
@@ -275,6 +565,63 @@
                         this.showSection(section);
                     });
                 });
+                
+                // Create workflow event listeners
+                this.setupCreateWorkflowListeners();
+            }
+            
+            setupCreateWorkflowListeners() {
+                // Step navigation
+                document.querySelectorAll('[data-next-step]').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const nextStep = button.getAttribute('data-next-step');
+                        this.goToStep(nextStep);
+                    });
+                });
+                
+                document.querySelectorAll('[data-prev-step]').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const prevStep = button.getAttribute('data-prev-step');
+                        this.goToStep(prevStep);
+                    });
+                });
+                
+                // Character upload
+                const uploadArea = document.querySelector('[data-upload="character"]');
+                const uploadInput = document.getElementById('characterUpload');
+                
+                if (uploadArea && uploadInput) {
+                    uploadArea.addEventListener('click', () => {
+                        uploadInput.click();
+                    });
+                    
+                    uploadInput.addEventListener('change', (e) => {
+                        this.handleCharacterUpload(e);
+                    });
+                }
+                
+                // Story method selection
+                document.querySelectorAll('.story-method').forEach(method => {
+                    method.addEventListener('click', (e) => {
+                        this.selectStoryMethod(method.getAttribute('data-method'));
+                    });
+                });
+                
+                // Chapter management
+                document.addEventListener('click', (e) => {
+                    const action = e.target.closest('[data-action]')?.getAttribute('data-action');
+                    if (action) {
+                        this.handleAction(action, e.target);
+                    }
+                });
+                
+                // File uploads
+                document.querySelectorAll('[data-upload]').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const uploadType = button.getAttribute('data-upload');
+                        this.handleFileUpload(uploadType);
+                    });
+                });
             }
             
             showSection(sectionId) {
@@ -304,6 +651,350 @@
                 if (activeLink) {
                     activeLink.classList.add('active');
                 }
+            }
+            
+            goToStep(stepId) {
+                console.log('Going to step:', stepId);
+                
+                // Hide all steps
+                document.querySelectorAll('.create-step').forEach(step => {
+                    step.style.display = 'none';
+                    step.classList.remove('active');
+                });
+                
+                // Show target step
+                const targetStep = document.getElementById(`step-${stepId}`);
+                if (targetStep) {
+                    targetStep.style.display = 'block';
+                    targetStep.classList.add('active');
+                    this.currentStep = stepId;
+                }
+            }
+            
+            handleCharacterUpload(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.characterImage = e.target.result;
+                        this.updateCharacterPreview();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+            
+            updateCharacterPreview() {
+                const uploadArea = document.querySelector('[data-upload="character"]');
+                if (uploadArea && this.characterImage) {
+                    uploadArea.innerHTML = `
+                        <div class="upload-preview">
+                            <img src="${this.characterImage}" alt="Character" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px;">
+                            <button class="btn btn-secondary" style="margin-top: 1rem;" onclick="this.clearCharacterImage()">Change Photo</button>
+                        </div>
+                    `;
+                }
+            }
+            
+            clearCharacterImage() {
+                this.characterImage = null;
+                const uploadArea = document.querySelector('[data-upload="character"]');
+                if (uploadArea) {
+                    uploadArea.innerHTML = `
+                        <div class="upload-placeholder">
+                            <i class="fas fa-user-plus"></i>
+                            <h4>Upload Character Photo</h4>
+                            <p>Choose a clear photo for consistent AI character generation</p>
+                            <button class="btn btn-primary">Select Photo</button>
+                        </div>
+                    `;
+                }
+            }
+            
+            selectStoryMethod(method) {
+                console.log('Selecting story method:', method);
+                
+                // Update active method
+                document.querySelectorAll('.story-method').forEach(m => {
+                    m.classList.remove('active');
+                });
+                document.querySelector(`[data-method="${method}"]`).classList.add('active');
+                
+                // Show corresponding content
+                document.querySelectorAll('.story-content').forEach(content => {
+                    content.classList.remove('active');
+                    content.style.display = 'none';
+                });
+                
+                const targetContent = document.getElementById(`content-${method}`);
+                if (targetContent) {
+                    targetContent.classList.add('active');
+                    targetContent.style.display = 'block';
+                }
+                
+                this.storyMethod = method;
+            }
+            
+            handleAction(action, element) {
+                console.log('Handling action:', action);
+                
+                switch (action) {
+                    case 'add-chapter':
+                        this.addChapter();
+                        break;
+                    case 'edit-chapter':
+                        this.editChapter(element);
+                        break;
+                    case 'delete-chapter':
+                        this.deleteChapter(element);
+                        break;
+                    case 'save-chapter':
+                        this.saveChapter();
+                        break;
+                    case 'close-editor':
+                        this.closeEditor();
+                        break;
+                    case 'generate-story':
+                        this.generateStory();
+                        break;
+                    case 'generate-image':
+                        this.generateImage();
+                        break;
+                    case 'approve-chapter':
+                        this.approveChapter();
+                        break;
+                    case 'export-pdf':
+                        this.exportPDF();
+                        break;
+                    case 'create-another':
+                        this.createAnotherBook();
+                        break;
+                    default:
+                        console.log('Unknown action:', action);
+                }
+            }
+            
+            addChapter() {
+                const chaptersList = document.getElementById('chaptersList');
+                const chapterCount = chaptersList.children.length + 1;
+                
+                const chapterItem = document.createElement('div');
+                chapterItem.className = 'chapter-item';
+                chapterItem.setAttribute('data-chapter', chapterCount);
+                chapterItem.innerHTML = `
+                    <div class="chapter-info">
+                        <span class="chapter-number">Chapter ${chapterCount}</span>
+                        <input type="text" class="chapter-title" placeholder="Chapter title">
+                    </div>
+                    <div class="chapter-actions">
+                        <button class="btn-icon" data-action="edit-chapter" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon" data-action="delete-chapter" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                chaptersList.appendChild(chapterItem);
+            }
+            
+            editChapter(element) {
+                const chapterItem = element.closest('.chapter-item');
+                const chapterNumber = chapterItem.getAttribute('data-chapter');
+                
+                // Show editor
+                const editor = document.getElementById('chapterEditor');
+                const currentChapterSpan = document.getElementById('currentChapterNumber');
+                
+                if (editor && currentChapterSpan) {
+                    editor.style.display = 'block';
+                    currentChapterSpan.textContent = chapterNumber;
+                    this.currentChapter = parseInt(chapterNumber);
+                }
+            }
+            
+            deleteChapter(element) {
+                const chapterItem = element.closest('.chapter-item');
+                if (confirm('Are you sure you want to delete this chapter?')) {
+                    chapterItem.remove();
+                    this.renumberChapters();
+                }
+            }
+            
+            renumberChapters() {
+                const chapters = document.querySelectorAll('.chapter-item');
+                chapters.forEach((chapter, index) => {
+                    const number = index + 1;
+                    chapter.setAttribute('data-chapter', number);
+                    chapter.querySelector('.chapter-number').textContent = `Chapter ${number}`;
+                });
+            }
+            
+            saveChapter() {
+                const chapterText = document.getElementById('chapterText').value;
+                console.log('Saving chapter:', this.currentChapter, chapterText);
+                
+                // Store chapter data
+                this.chapters[this.currentChapter - 1] = {
+                    title: document.querySelector(`[data-chapter="${this.currentChapter}"] .chapter-title`).value,
+                    content: chapterText
+                };
+                
+                this.closeEditor();
+            }
+            
+            closeEditor() {
+                const editor = document.getElementById('chapterEditor');
+                if (editor) {
+                    editor.style.display = 'none';
+                }
+            }
+            
+            generateStory() {
+                const prompt = document.getElementById('aiPrompt').value;
+                const length = document.getElementById('storyLength').value;
+                const theme = document.getElementById('storyTheme').value;
+                
+                console.log('Generating story with:', { prompt, length, theme });
+                
+                // Simulate AI story generation
+                setTimeout(() => {
+                    const aiResult = document.getElementById('aiResult');
+                    const storyPreview = document.getElementById('storyPreview');
+                    
+                    if (aiResult && storyPreview) {
+                        storyPreview.innerHTML = `
+                            <div class="generated-story">
+                                <h5>Generated Story Preview</h5>
+                                <p><strong>Theme:</strong> ${theme}</p>
+                                <p><strong>Length:</strong> ${length}</p>
+                                <div class="story-chapters">
+                                    <div class="chapter-preview">
+                                        <h6>Chapter 1: The Beginning</h6>
+                                        <p>Once upon a time, ${this.characterName || 'our hero'} discovered something amazing...</p>
+                                    </div>
+                                    <div class="chapter-preview">
+                                        <h6>Chapter 2: The Adventure</h6>
+                                        <p>The journey continued with exciting challenges...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        aiResult.style.display = 'block';
+                    }
+                }, 2000);
+            }
+            
+            generateImage() {
+                console.log('Generating AI image for current chapter');
+                
+                // Simulate AI image generation
+                const imageContainer = document.querySelector('.chapter-image .image-placeholder');
+                if (imageContainer) {
+                    imageContainer.innerHTML = `
+                        <div class="generating">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Generating AI illustration...</p>
+                        </div>
+                    `;
+                    
+                    setTimeout(() => {
+                        imageContainer.innerHTML = `
+                            <img src="https://via.placeholder.com/400x300/ff6b6b/ffffff?text=AI+Generated+Image" 
+                                 alt="AI Generated Illustration" 
+                                 style="width: 100%; height: 250px; object-fit: cover; border-radius: 10px;">
+                        `;
+                    }, 3000);
+                }
+            }
+            
+            approveChapter() {
+                console.log('Chapter approved');
+                alert('Chapter approved! Moving to next chapter...');
+            }
+            
+            exportPDF() {
+                console.log('Exporting to PDF');
+                
+                // Show success message
+                const exportSuccess = document.getElementById('exportSuccess');
+                if (exportSuccess) {
+                    exportSuccess.style.display = 'block';
+                }
+                
+                // Simulate PDF generation
+                setTimeout(() => {
+                    alert('PDF export complete! Your book is ready for download.');
+                }, 2000);
+            }
+            
+            createAnotherBook() {
+                // Reset the workflow
+                this.currentStep = 'character';
+                this.characterImage = null;
+                this.chapters = [];
+                this.goToStep('character');
+                
+                // Clear forms
+                document.getElementById('characterName').value = '';
+                document.getElementById('characterAge').value = '';
+                this.clearCharacterImage();
+            }
+            
+            handleFileUpload(uploadType) {
+                console.log('Handling file upload:', uploadType);
+                
+                // Create file input dynamically
+                const input = document.createElement('input');
+                input.type = 'file';
+                
+                switch (uploadType) {
+                    case 'google-docs':
+                    case 'word':
+                        input.accept = '.docx,.doc';
+                        break;
+                    case 'text':
+                        input.accept = '.txt';
+                        break;
+                }
+                
+                input.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        this.processUploadedFile(file, uploadType);
+                    }
+                });
+                
+                input.click();
+            }
+            
+            processUploadedFile(file, uploadType) {
+                console.log('Processing uploaded file:', file.name, uploadType);
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const content = e.target.result;
+                    
+                    // Show upload preview
+                    const uploadPreview = document.getElementById('uploadPreview');
+                    const contentPreview = document.getElementById('contentPreview');
+                    
+                    if (uploadPreview && contentPreview) {
+                        contentPreview.innerHTML = `
+                            <div class="file-info">
+                                <h5><i class="fas fa-file"></i> ${file.name}</h5>
+                                <p>File size: ${(file.size / 1024).toFixed(2)} KB</p>
+                                <div class="content-sample">
+                                    <h6>Content Preview:</h6>
+                                    <p>${content.substring(0, 200)}...</p>
+                                </div>
+                            </div>
+                        `;
+                        uploadPreview.style.display = 'block';
+                    }
+                };
+                
+                reader.readAsText(file);
             }
         }
 
