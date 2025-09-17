@@ -15,7 +15,13 @@ class KidsBookCreator {
     
     init() {
         this.setupEventListeners();
-        this.showSection('hero');
+        // Check if there's a hash in the URL, otherwise show hero
+        const hash = window.location.hash.substring(1);
+        if (hash && document.getElementById(hash)) {
+            this.showSection(hash);
+        } else {
+            this.showSection('hero');
+        }
     }
     
     setupEventListeners() {
@@ -40,11 +46,19 @@ class KidsBookCreator {
             });
         });
         
-        // Hero buttons
+        // Hero buttons and other section buttons
         document.querySelectorAll('[data-section]').forEach(button => {
             button.addEventListener('click', (e) => {
                 const section = button.getAttribute('data-section');
                 this.showSection(section);
+            });
+        });
+        
+        // Modal close buttons
+        document.querySelectorAll('[data-modal]').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const modalId = button.getAttribute('data-modal');
+                this.closeModal(modalId);
             });
         });
     }
