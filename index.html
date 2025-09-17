@@ -461,6 +461,12 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script>
+        console.log('Inline script loaded - testing JavaScript execution');
+        window.addEventListener('load', function() {
+            console.log('Window loaded - DOM ready');
+        });
+    </script>
+    <script src="app.js?v=2.0"></script>
 </body>
 </html>
